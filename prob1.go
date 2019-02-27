@@ -1,13 +1,26 @@
 package main
 
-import "fmt"
+import (
+    "fmt"
+    "sync"
+    )
 
 func main(){
-   suma := 0
-   for i := 0 ; i < 1000 ; i++{
-      if i % 3 == 0 || i % 5 == 0 { suma += i}
-   }
-   fmt.Println(suma)
+    var wg sync.WaitGroup
+    suma := 0
+    for i := 0 ; i < 1000 ; i++{
+        wg.Add(1)
+        go func(index int){
+            defer wg.Done()
+             if index % 3 == 0 || index % 5 == 0 { suma += index }
+        }(i)
+
+         
+    }
+
+    wg.Wait()
+
+    fmt.Println(suma)
 }
 
 // solved by iterating over everynumber, 
